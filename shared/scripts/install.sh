@@ -3,8 +3,7 @@ set -e
 
 echo "Installing dependencies..."
 if [ -x "$(command -v apt-get)" ]; then
-  sudo apt-get update -y
-  sudo apt-get install -y unzip
+  sudo su -s /bin/bash -c 'sleep 30 && apt-get update && apt-get install unzip' root
 else
   sudo yum update -y
   sudo yum install -y unzip wget
@@ -12,9 +11,9 @@ fi
 
 
 echo "Fetching Consul..."
-CONSUL=0.6.4
+CONSUL=1.0.0
 cd /tmp
-wget https://releases.hashicorp.com/consul/${CONSUL}/consul_${CONSUL}_linux_amd64.zip -O consul.zip
+wget https://releases.hashicorp.com/consul/${CONSUL}/consul_${CONSUL}_linux_amd64.zip -O consul.zip --quiet
 
 echo "Installing Consul..."
 unzip consul.zip >/dev/null
@@ -43,9 +42,11 @@ then
   sudo chmod 0644 /etc/service/consul
 else
   echo "Installing Systemd service..."
+  sudo mkdir -p /etc/sysconfig
   sudo mkdir -p /etc/systemd/system/consul.d
   sudo chown root:root /tmp/consul.service
   sudo mv /tmp/consul.service /etc/systemd/system/consul.service
+  sudo mv /tmp/consul*json /etc/systemd/system/consul.d/ || echo
   sudo chmod 0644 /etc/systemd/system/consul.service
   sudo mv /tmp/consul_flags /etc/sysconfig/consul
   sudo chown root:root /etc/sysconfig/consul
