@@ -95,7 +95,7 @@ variable "tagName" {
 }
 
 variable "subnets" {
-  type = "map"
+  type = map
   description = "map of subnets to deploy your infrastructure in, must have as many keys as your server count (default 3), -var 'subnets={\"0\"=\"subnet-12345\",\"1\"=\"subnets-23456\"}' "
 }
 
