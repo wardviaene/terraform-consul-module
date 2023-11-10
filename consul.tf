@@ -10,6 +10,7 @@ resource "aws_instance" "server" {
         host = coalesce(self.public_ip, self.private_ip)
         user = "${lookup(var.user, var.platform)}"
         private_key = "${file("${var.key_path}")}"
+        agent = false
     }
 
     #Instance tags
